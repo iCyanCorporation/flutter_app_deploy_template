@@ -21,11 +21,35 @@ jobs:
         uses: actions/checkout@v4
 
       # 証明書を設定
-      - name: Import Code-Signing Certificates
-        uses: Apple-Actions/import-codesign-certs@v3
-        with:
-          p12-file-base64: ${{ secrets.IOS_P12_CER_BASE64 }}
-          p12-password: ${{ secrets.IOS_P12_CER_PASSWORD }}
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_P12_CER_BASE64 }}
+          P12_PASSWORD: ${{ secrets.IOS_P12_CER_PASSWORD }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.IOS_APPLE_APP_PASS }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
     
       - name: install flutter
         uses: subosito/flutter-action@v2
@@ -79,30 +103,24 @@ jobs:
             echo "Patch file not found at $PATCH_FILE. Skipping patch step."
           fi
         
-      # 証明書の生成
-      # ProvisioningProfile をシークレットから取り出して、プロジェクトに無理やりセットする
+     - name: Run build_runner build
+        run: dart run build_runner build --delete-conflicting-outputs
+
       - name: Create environ.json
         env:
           ENVIRON_JSON: ${{ secrets.ENVIRON_JSON }}
         run: echo "$ENVIRON_JSON" > ./environ.json
 
-      - name: Install Ruby and dependencies
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
+      - name: Building IPA
+        run: |
+          flutter build ipa --release \
+          --dart-define-from-file=environ.json \
+          --export-options-plist=ios/Runner/ExportOptions.plist \
+          --build-number ${{ github.event.inputs.build_number }}
 
-      - name: Install Fastlane
-        run: gem install fastlane
-
-      - name: Setup Fastlane match for provisioning profiles
-        run: fastlane match appstore
+      - name: Upload to AppStoreConnect
         env:
-          MATCH_PASSWORD: ${{ secrets.APPLE_MATCH_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APPLLE_CONNECT_API_KEY }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APPLEE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APPLE_CONNECT_KEY_ID }}
-          APPLE_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
-
-      - name: Build iOS App
-        run: fastlane build
+          APPLE_ID: ${{ secrets.IOS_APPLE_ID }}
+          APPLE_APP_PASS: ${{ secrets.IOS_APPLE_APP_PASS }}
+        run: xcrun altool --upload-app -f "./build/ios/ipa/Runner.ipa" -t ios -u "$APPLE_ID" -p "$APPLE_APP_PASS"
         
