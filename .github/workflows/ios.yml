@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -switch /Applications/Xcode_15.0.1.app
     
       - name: install flutter
         uses: subosito/flutter-action@v2
@@ -127,13 +130,7 @@ jobs:
           -allowProvisioningUpdates \
           archive
 
-      - name: Exporting IPA
-        run: |
-          xcodebuild -exportArchive \
-          -archivePath $PWD/build/ios/archive/Runner.xcarchive \
-          -exportPath $PWD/build/ios/ipa \
-          -exportOptionsPlist ios/Runner/ExportOptions.plist \
-          -allowProvisioningUpdates
+
 
       - name: Upload to AppStoreConnect
         env:
