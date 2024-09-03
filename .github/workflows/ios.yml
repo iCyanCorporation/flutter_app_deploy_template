@@ -1,0 +1,108 @@
+name: iOS CD
+
+on:
+  #push:
+  #  branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: 'input a Build Number(ex:11)'
+        required: true
+        type: number
+jobs:
+  build:
+    # iOSビルド用にmacOSを使う(消費ビルド時間に注意)
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # 証明書を設定
+      - name: Import Code-Signing Certificates
+        uses: Apple-Actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.IOS_P12_CER_BASE64 }}
+          p12-password: ${{ secrets.IOS_P12_CER_PASSWORD }}
+    
+      - name: install flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: flutter dependencies install
+        run: flutter pub get
+
+      # Apply tflite_flutter patch
+      - name: Apply tflite_flutter patch
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Contents of current directory:"
+          ls -la
+
+          TFLITE_DIR="$HOME/.pub-cache/hosted/pub.dev/tflite_flutter-0.10.4"
+          PATCH_FILE="$(pwd)/tflite_flutter_fix.patch"
+
+          if [ -f "$PATCH_FILE" ]; then
+            echo "Patch file found at $PATCH_FILE. Attempting to apply patch..."
+
+            if [ -d "$TFLITE_DIR" ]; then
+              echo "Found tflite_flutter directory: $TFLITE_DIR"
+              cd "$TFLITE_DIR"
+              echo "Current directory after cd: $(pwd)"
+              echo "Contents of patch file:"
+              cat "$PATCH_FILE"
+
+              echo "Listing contents of tflite_flutter directory:"
+              ls -la
+
+              echo "Listing contents of possible subdirectories:"
+              ls -la lib/src
+
+              if [ -f "lib/src/tensor.dart" ]; then
+                echo "Applying patch to lib/src/tensor.dart..."
+                patch -p0 --verbose < "$PATCH_FILE"
+              else
+                echo "Error: tensor.dart not found in expected directories. Patch cannot be applied."
+                exit 1
+              fi
+            else
+              echo "Error: tflite_flutter directory not found at $TFLITE_DIR"
+              echo "Contents of .pub-cache/hosted/pub.dev:"
+              ls -la $HOME/.pub-cache/hosted/pub.dev || echo "pub.dev directory not found"
+              exit 1
+            fi
+          else
+            echo "Patch file not found at $PATCH_FILE. Skipping patch step."
+          fi
+        
+      # 証明書の生成
+      # ProvisioningProfile をシークレットから取り出して、プロジェクトに無理やりセットする
+      - name: Create environ.json
+        env:
+          ENVIRON_JSON: ${{ secrets.ENVIRON_JSON }}
+        run: echo "$ENVIRON_JSON" > ./environ.json
+
+      - name: Install Ruby and dependencies
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Setup Fastlane match for provisioning profiles
+        run: fastlane match appstore
+        env:
+          MATCH_PASSWORD: ${{ secrets.APPLE_MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APPLLE_CONNECT_API_KEY }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APPLEE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APPLE_CONNECT_KEY_ID }}
+          APPLE_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+
+      - name: Build iOS App
+        run: fastlane build
+        
