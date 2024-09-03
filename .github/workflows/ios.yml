@@ -146,9 +146,14 @@ jobs:
           --export-options-plist=ios/Runner/ExportOptions.plist \
           --build-number ${{ github.event.inputs.build_number }}
 
+      # - name: Upload to AppStoreConnect
+      #   env:
+      #     APPLE_ID: ${{ secrets.IOS_APPLE_ID }}
+      #     APPLE_APP_PASS: ${{ secrets.IOS_APPLE_APP_PASS }}
+      #   run: xcrun altool --upload-app -f "./build/ios/ipa/Runner.ipa" -t ios -u "$APPLE_ID" -p "$APPLE_APP_PASS"
+        
       - name: Upload to AppStoreConnect
         env:
-          APPLE_ID: ${{ secrets.IOS_APPLE_ID }}
-          APPLE_APP_PASS: ${{ secrets.IOS_APPLE_APP_PASS }}
-        run: xcrun altool --upload-app -f "./build/ios/ipa/Runner.ipa" -t ios -u "$APPLE_ID" -p "$APPLE_APP_PASS"
-        
+          API_KEY : ${{ secrets.APPLE_CONNECT_API_KEY }}
+          ISSUER_ID: ${{ secrets.APPLE_CONNECT_ISSUER_ID }}
+        run: xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey "$API_KEY" --apiIssuer "$ISSUER_ID" 
