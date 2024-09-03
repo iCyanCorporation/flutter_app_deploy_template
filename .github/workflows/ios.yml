@@ -116,23 +116,16 @@ jobs:
           ENVIRON_JSON: ${{ secrets.ENVIRON_JSON }}
         run: echo "$ENVIRON_JSON" > ./environ.json
 
-      - name: Install Ruby and dependencies
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
+      - name: Building IPA
+        run: |
+          flutter build ipa --release \
+          --dart-define-from-file=environ.json \
+          --export-options-plist=ios/Runner/ExportOptions.plist \
+          --build-number ${{ github.event.inputs.build_number }}
 
-      - name: Install Fastlane
-        run: gem install fastlane
-
-      - name: Setup Fastlane match for provisioning profiles
-        run: fastlane match appstore
+      - name: Upload to AppStoreConnect
         env:
-          MATCH_PASSWORD: ${{ secrets.APPLE_MATCH_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APPLLE_CONNECT_API_KEY }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APPLEE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APPLE_CONNECT_KEY_ID }}
-          APPLE_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
-
-      - name: Build iOS App
-        run: fastlane build
+          APPLE_ID: ${{ secrets.IOS_APPLE_ID }}
+          APPLE_APP_PASS: ${{ secrets.IOS_APPLE_APP_PASS }}
+        run: xcrun altool --upload-app -f "./build/ios/ipa/Runner.ipa" -t ios -u "$APPLE_ID" -p "$APPLE_APP_PASS"
         
