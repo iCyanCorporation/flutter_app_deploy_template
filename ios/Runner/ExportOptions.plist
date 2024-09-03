@@ -9,7 +9,7 @@
 		<key>provisioningProfiles</key>
 		<dict>
 			<key>com.icyan.todolist</key>
-			<string>distribution</string>
+			<string>todolist_distribution</string>
 		</dict>
 		<key>signingCertificate</key>
 		<string>Apple Distribution</string>
