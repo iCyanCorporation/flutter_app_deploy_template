@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -switch /Applications/Xcode_15.3.app
     
       - name: install flutter
         uses: subosito/flutter-action@v2
@@ -109,25 +112,33 @@ jobs:
           ENVIRON_JSON: ${{ secrets.ENVIRON_JSON }}
         run: echo "$ENVIRON_JSON" > ./environ.json
 
+      # - name: Building IPA
+      #   run: |
+      #     flutter build ipa --release \
+      #     --dart-define-from-file=environ.json \
+      #     --export-options-plist=ios/Runner/ExportOptions.plist \
+      #     --build-number ${{ github.event.inputs.build_number }} \
+      #     --no-codesign
+          
+      # - name: Building IPA with manual xcodebuild
+      #   run: |
+      #     xcodebuild -workspace ios/Runner.xcworkspace \
+      #     -scheme Runner \
+      #     -sdk iphoneos \
+      #     -configuration Release \
+      #     -archivePath $PWD/build/ios/archive/Runner.xcarchive \
+      #     -allowProvisioningUpdates \
+      #     archive
+
+      - name: Run build_runner build
+        run: dart run build_runner build --delete-conflicting-outputs
+
       - name: Building IPA
         run: |
           flutter build ipa --release \
           --dart-define-from-file=environ.json \
           --export-options-plist=ios/Runner/ExportOptions.plist \
-          --build-number ${{ github.event.inputs.build_number }} \
-          --no-codesign
-          
-      - name: Building IPA with manual xcodebuild
-        run: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-          -scheme Runner \
-          -sdk iphoneos \
-          -configuration Release \
-          -archivePath $PWD/build/ios/archive/Runner.xcarchive \
-          -allowProvisioningUpdates \
-          archive
-
-
+          --build-number ${{ github.event.inputs.build_number }}
 
       - name: Upload to AppStoreConnect
         env:
