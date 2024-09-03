@@ -114,7 +114,26 @@ jobs:
           flutter build ipa --release \
           --dart-define-from-file=environ.json \
           --export-options-plist=ios/Runner/ExportOptions.plist \
-          --build-number ${{ github.event.inputs.build_number }}
+          --build-number ${{ github.event.inputs.build_number }} \
+          --no-codesign
+          
+      - name: Building IPA with manual xcodebuild
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace \
+          -scheme Runner \
+          -sdk iphoneos \
+          -configuration Release \
+          -archivePath $PWD/build/ios/archive/Runner.xcarchive \
+          -allowProvisioningUpdates \
+          archive
+
+      - name: Exporting IPA
+        run: |
+          xcodebuild -exportArchive \
+          -archivePath $PWD/build/ios/archive/Runner.xcarchive \
+          -exportPath $PWD/build/ios/ipa \
+          -exportOptionsPlist ios/Runner/ExportOptions.plist \
+          -allowProvisioningUpdates
 
       - name: Upload to AppStoreConnect
         env:
