@@ -92,6 +92,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
 
+      # **Run flutter precache to ensure all required iOS artifacts are available**
+      - name: Flutter Precache for iOS
+        run: flutter precache --ios
+
       - name: flutter dependencies install
         run: flutter pub get
 
