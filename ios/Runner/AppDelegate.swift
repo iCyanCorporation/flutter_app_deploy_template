@@ -1,20 +1,26 @@
-import Flutter
 import UIKit
+import Flutter
 
-@main
-@objc class AppDelegate: FlutterAppDelegate {
-  
-    var flutterEngine: FlutterEngine?
+@UIApplicationMain
+class AppDelegate: FlutterAppDelegate {
     
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-    GeneratedPluginRegistrant.register(with: self)
-      
-      flutterEngine = FlutterEngine(name: "my_flutter_engine")
-      flutterEngine?.run()
-      
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+
+        // Retrieve the shared text from UserDefaults
+        let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
+        let sharedText = userDefaults?.string(forKey: "sharedText")
+
+        // Pass the shared text to Flutter using MethodChannel
+        let flutterViewController = window?.rootViewController as! FlutterViewController
+        let channel = FlutterMethodChannel(name: "com.icyan.todolist.share", binaryMessenger: flutterViewController.binaryMessenger)
+        
+        if let text = sharedText {
+            channel.invokeMethod("receiveText", arguments: text)
+        }
+        
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
 }
