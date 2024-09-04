@@ -14,7 +14,8 @@
 		5A4F90F92C87F86E00E03663 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4F90F82C87F86E00E03663 /* ShareViewController.swift */; };
 		5A4F90FC2C87F86E00E03663 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A4F90FA2C87F86E00E03663 /* MainInterface.storyboard */; };
 		5A4F91002C87F86E00E03663 /* myShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5A4F90F62C87F86E00E03663 /* myShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		5A4F91072C88246B00E03663 /* Flutter.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4F91062C88246B00E03663 /* Flutter.xcframework */; };
+		5A4F910B2C8855E400E03663 /* Flutter.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4F910A2C8855E400E03663 /* Flutter.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
+		5A4F910C2C8855E400E03663 /* Flutter.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4F910A2C8855E400E03663 /* Flutter.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -51,6 +52,17 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5A4F910D2C8855E400E03663 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5A4F910C2C8855E400E03663 /* Flutter.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -76,6 +88,7 @@
 		5A4F90FB2C87F86E00E03663 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		5A4F90FD2C87F86E00E03663 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A4F91062C88246B00E03663 /* Flutter.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Flutter.xcframework; path = ../../../../development/flutter/bin/cache/artifacts/engine/ios/extension_safe/Flutter.xcframework; sourceTree = "<group>"; };
+		5A4F910A2C8855E400E03663 /* Flutter.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Flutter.xcframework; path = ../Flutter/Release/Flutter.xcframework; sourceTree = "<group>"; };
 		5ADE27702C85FF7D00D61BB6 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		7188754C18E16EF836FEC87F /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -108,7 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A4F91072C88246B00E03663 /* Flutter.xcframework in Frameworks */,
+				5A4F910B2C8855E400E03663 /* Flutter.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +221,7 @@
 			isa = PBXGroup;
 			children = (
 				5A4F91062C88246B00E03663 /* Flutter.xcframework */,
+				5A4F910A2C8855E400E03663 /* Flutter.xcframework */,
 				AE9A9124C7A4A62C22350039 /* Pods_Runner.framework */,
 				7188754C18E16EF836FEC87F /* Pods_RunnerTests.framework */,
 			);
@@ -243,6 +257,7 @@
 				5A4F90F22C87F86E00E03663 /* Sources */,
 				5A4F90F32C87F86E00E03663 /* Frameworks */,
 				5A4F90F42C87F86E00E03663 /* Resources */,
+				5A4F910D2C8855E400E03663 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
