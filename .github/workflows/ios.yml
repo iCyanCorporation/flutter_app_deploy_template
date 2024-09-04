@@ -149,12 +149,17 @@ jobs:
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ github.event.inputs.build_number }}
           release_name: "Release ${{ github.event.inputs.build_number }}"
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
           draft: false
           prerelease: false
-          token: ${{ github.token }}
 
       - name: Upload IPA to GitHub Release
         uses: actions/upload-release-asset@v1
