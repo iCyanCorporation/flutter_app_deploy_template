@@ -146,10 +146,29 @@ jobs:
           --export-options-plist=ios/Runner/ExportOptions.plist \
           --build-number ${{ github.event.inputs.build_number }}
 
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.build_number }}
+          release_name: "Release ${{ github.event.inputs.build_number }}"
+          draft: false
+          prerelease: false
+          token: ${{ github.token }}
+
+      - name: Upload IPA to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/ios/ipa/Runner.ipa
+          asset_name: Runner_${{ github.event.inputs.build_number }}.ipa
+          asset_content_type: application/octet-stream
+          token: ${{ github.token }}
+
       - name: Set up App Store Connect API Key
         run: |
           mkdir -p /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys
-          echo "${{ secrets.APPLE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys/AuthKey_***.p8
+          echo "${{ secrets.APPLE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys/AuthKey_${{ secrets.APPLE_CONNECT_API_KEY_ID }}.p8
 
       - name: Upload to AppStoreConnect
         env:
