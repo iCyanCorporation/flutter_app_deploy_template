@@ -157,6 +157,9 @@ jobs:
           ENVIRON_JSON: ${{ secrets.ENVIRON_JSON }}
         run: echo "$ENVIRON_JSON" > ./environ.json
 
+      - name: set up flutter xcframework
+        run: flutter build ios-framework --no-debug --no-profile --release --output=Flutter
+
       # - name: Building IPA
       #   run: |
       #     flutter build ipa --release \
