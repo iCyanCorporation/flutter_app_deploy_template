@@ -15,7 +15,6 @@
 		5A4F90FC2C87F86E00E03663 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A4F90FA2C87F86E00E03663 /* MainInterface.storyboard */; };
 		5A4F91002C87F86E00E03663 /* myShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5A4F90F62C87F86E00E03663 /* myShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5A4F91072C88246B00E03663 /* Flutter.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4F91062C88246B00E03663 /* Flutter.xcframework */; };
-		5A4F91082C88246B00E03663 /* Flutter.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4F91062C88246B00E03663 /* Flutter.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -50,17 +49,6 @@
 				5A4F91002C87F86E00E03663 /* myShareExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5A4F91092C88246B00E03663 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				5A4F91082C88246B00E03663 /* Flutter.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
@@ -255,7 +243,6 @@
 				5A4F90F22C87F86E00E03663 /* Sources */,
 				5A4F90F32C87F86E00E03663 /* Frameworks */,
 				5A4F90F42C87F86E00E03663 /* Resources */,
-				5A4F91092C88246B00E03663 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
