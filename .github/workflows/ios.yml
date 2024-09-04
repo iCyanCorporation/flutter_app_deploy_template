@@ -163,12 +163,13 @@ jobs:
 
       - name: Upload IPA to GitHub Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/ios/ipa/todolist.ipa
           asset_name: Runner_${{ github.event.inputs.build_number }}.ipa
           asset_content_type: application/octet-stream
-          token: ${{ github.token }}
 
       - name: Set up App Store Connect API Key
         run: |
