@@ -1,8 +1,0 @@
-app_identifier("com.icyan.todolist") # The bundle identifier of your app
-apple_id("icyan.contact@gmail.com") # Your Apple Developer Portal username
-
-itc_team_id("93CY32QG6Z")
-team_id("93CY32QG6Z")
-
-# For more information about the Appfile, see:
-#     https://docs.fastlane.tools/advanced/#appfile
