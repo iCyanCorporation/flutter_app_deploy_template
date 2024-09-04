@@ -22,12 +22,12 @@ jobs:
 
       # Cache Flutter SDK and dependencies
       - name: Cache Flutter SDK and dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
-            ~/.pub-cache
-            ~/development/flutter
-          key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
+            ~/.pub-cache  # Cache for Dart/Flutter packages
+            ${{ runner.tool_cache }}/flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }} 
           restore-keys: |
             ${{ runner.os }}-flutter-
 
@@ -54,16 +54,19 @@ jobs:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_P12_CER_BASE64 }}
           P12_PASSWORD: ${{ secrets.IOS_P12_CER_PASSWORD }}
           BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
+          EXTENSION_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_MOBILEPROVISION_EXTENSION_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.IOS_APPLE_APP_PASS }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          EXT_PP_PATH=$RUNNER_TEMP/todolist_extension_distribution.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          echo "$EXTENSION_PROVISION_PROFILE_BASE64" | base64 --decode --output $EXT_PP_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
@@ -78,6 +81,7 @@ jobs:
           # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $EXT_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       # Cache CocoaPods
       - name: Cache CocoaPods
