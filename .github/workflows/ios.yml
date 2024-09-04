@@ -20,6 +20,17 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
+      # Cache Flutter SDK and dependencies
+      - name: Cache Flutter SDK and dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.pub-cache
+            ~/development/flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
       - name: Select Xcode version
         run: sudo xcode-select -switch /Applications/Xcode_15.3.app
     
@@ -28,6 +39,15 @@ jobs:
         with:
           flutter-version: '3.24.0'
           channel: 'stable'
+
+      # Cache Keychain (provisioning profile and certificates)
+      - name: Cache Provisioning Profile and Certificates
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/Library/MobileDevice/Provisioning\ Profiles
+            ~/Library/Keychains
+          key: ${{ runner.os }}-certs-${{ github.sha }}
 
       - name: Install the Apple certificate and provisioning profile
         env:
@@ -59,8 +79,23 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
+      # Cache CocoaPods
+      - name: Cache CocoaPods
+        uses: actions/cache@v2
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
       - name: flutter dependencies install
         run: flutter pub get
+
+      # Install CocoaPods dependencies
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install
 
       # Apply tflite_flutter patch
       - name: Apply tflite_flutter patch
