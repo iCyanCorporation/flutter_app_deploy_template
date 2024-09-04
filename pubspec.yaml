@@ -29,7 +29,7 @@ dependencies:
   tflite_flutter: ^0.10.4
 
   # launch
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.13.1
 
   # for Japanese
   mecab_dart: 0.1.6
@@ -41,10 +41,28 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/logo.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/logo.png"
+
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo.png"
+  image_path: "assets/logo.png"
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -54,10 +72,3 @@ flutter:
   # assets
   assets:
     - assets/
-    - assets/images/
-    - assets/images/logo/
-    - assets/images/ios/
-    - assets/images/android/
-    - assets/models/
-    - assets/test/
-    - assets/ipadic/

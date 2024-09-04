@@ -174,10 +174,10 @@ jobs:
       - name: Set up App Store Connect API Key
         run: |
           mkdir -p /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys
-          echo "${{ secrets.APPLE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys/AuthKey_${{ secrets.APPLE_CONNECT_API_KEY_ID }}.p8
+          echo "${{ secrets.APPLE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys/AuthKey_${{ secrets.APPLE_CONNECT_API_KEY }}.p8
 
       - name: Upload to AppStoreConnect
         env:
-          API_KEY : ${{ secrets.APPLE_CONNECT_API_KEY }}
+          API_KEY: ${{ secrets.APPLE_CONNECT_API_KEY }}
           ISSUER_ID: ${{ secrets.APPLE_CONNECT_ISSUER_ID }}
-        run: xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey "$API_KEY" --apiIssuer "$ISSUER_ID" 
+        run: xcrun altool --upload-app --type ios -f build/ios/ipa/todolist.ipa --apiKey "$API_KEY" --apiIssuer "$ISSUER_ID"
