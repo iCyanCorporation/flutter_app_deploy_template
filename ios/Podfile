@@ -37,7 +37,7 @@ target 'Runner' do
   end
 
   # Share Extension is name of Extension which you created which is in this case 'Share Extension'
-  target 'Share Extension' do
+  target 'myShareExtension' do
     inherit! :search_paths
   end
 end
