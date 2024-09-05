@@ -1,37 +1,20 @@
-//
-//  ShareViewController.swift
-//  myShareExtension
-//
-//  Created by 陳豐文 on 2024/09/04.
-//
-import receive_sharing_intent
+import UIKit
+import Social
 
-class ShareViewController: RSIShareViewController {
-      
-    // Use this method to return false if you don't want to redirect to host app automatically.
-    // Default is true
-    override func shouldAutoRedirect() -> Bool {
-        return true
-    }
-    
-    // Use this to change label of Post button
-    // override func presentationAnimationDidFinish() {
-    //     super.presentationAnimationDidFinish()
-    //     navigationController?.navigationBar.topItem?.rightBarButtonItem?.title = "Send"
-    // }
-        // 受け取ったテキストデータを Flutter に渡す
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        if let content = self.extensionContext?.inputItems.first as? NSExtensionItem,
-           let text = content.attributedContentText?.string {
-            // Flutterにデータを渡す処理
-            // 受け取ったテキストを UserDefaults などを通して main.dart へ渡す
-            let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
-            userDefaults?.set(text, forKey: "sharedText")
+class ShareViewController: SLComposeServiceViewController {
+    override func didSelectPost() {
+        if let item = extensionContext?.inputItems.first as? NSExtensionItem,
+           let itemProvider = item.attachments?.first {
+            if itemProvider.hasItemConformingToTypeIdentifier("public.text") {
+                itemProvider.loadItem(forTypeIdentifier: "public.text", options: nil) { (text, error) in
+                    if let sharedText = text as? String {
+                        let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
+                        userDefaults?.set(sharedText, forKey: "sharedText")
+                        userDefaults?.synchronize()
+                    }
+                }
+            }
         }
-
-        // 終了処理
-        self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+        self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
     }
 }

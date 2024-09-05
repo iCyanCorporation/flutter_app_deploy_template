@@ -15,6 +15,7 @@ import Flutter
       if call.method == "getSharedText" {
         // Retrieve shared text from UserDefaults (or other shared data sources)
         let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
+        userDefaults?.set("Shared text from LINE", forKey: "sharedText")
         if let sharedText = userDefaults?.string(forKey: "sharedText") {
           result(sharedText)
         } else {

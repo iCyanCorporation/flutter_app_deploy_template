@@ -36,7 +36,7 @@ dependencies:
 
   # for sharing
   receive_sharing_intent: ^1.8.0
-  shared_preferences: ^2.0.8
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:
