@@ -5,38 +5,18 @@
 //  Created by 陳豐文 on 2024/09/04.
 //
 import UIKit
-import Social
 import Flutter
 
-class ShareViewController: SLComposeServiceViewController {
-
+class ShareViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        captureSharedText()
+        showFlutter()
     }
 
-    func captureSharedText() {
-        if let items = extensionContext?.inputItems as? [NSExtensionItem] {
-            for item in items {
-                if let attachments = item.attachments {
-                    for attachment in attachments {
-                        if attachment.hasItemConformingToTypeIdentifier("public.text") {
-                            attachment.loadItem(forTypeIdentifier: "public.text", options: nil) { (data, error) in
-                                if let text = data as? String {
-                                    self.sendTextToFlutter(text)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    func sendTextToFlutter(_ text: String) {
-        // Communicate with the main Flutter app via UserDefaults or MethodChannel
-        let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension") // Use App Group if needed
-        userDefaults?.set(text, forKey: "sharedText")
-        userDefaults?.synchronize()
+    func showFlutter() {
+        let flutterViewController = FlutterViewController(project: nil, nibName: nil, bundle: nil)
+        addChild(flutterViewController)
+        view.addSubview(flutterViewController.view)
+        flutterViewController.view.frame = view.bounds
     }
 }
