@@ -222,10 +222,10 @@ jobs:
           asset_name: Runner_${{ github.event.inputs.build_number }}.ipa
           asset_content_type: application/octet-stream
 
-      - name: Set up App Store Connect API Key
-        run: |
-          mkdir -p /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys
-          echo "${{ secrets.APPLE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys/AuthKey_${{ secrets.APPLE_CONNECT_API_KEY }}.p8
+      # - name: Set up App Store Connect API Key
+      #   run: |
+      #     mkdir -p /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys
+      #     echo "${{ secrets.APPLE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > /Users/runner/work/flutter_app_deploy_template/flutter_app_deploy_template/private_keys/AuthKey_${{ secrets.APPLE_CONNECT_API_KEY }}.p8
 
       # - name: Upload to AppStoreConnect
       #   env:
