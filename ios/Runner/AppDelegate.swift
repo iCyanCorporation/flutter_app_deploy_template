@@ -2,34 +2,29 @@ import UIKit
 import Flutter
 
 @UIApplicationMain
-class AppDelegate: FlutterAppDelegate {
-    
-    override func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-    ) -> Bool {
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    let controller = window?.rootViewController as! FlutterViewController
+    let methodChannel = FlutterMethodChannel(name: "com.icyan.todolist/share",
+                                             binaryMessenger: controller.binaryMessenger)
 
-        // FlutterViewController setup
-        let flutterViewController = window?.rootViewController as! FlutterViewController
-        let channel = FlutterMethodChannel(name: "com.icyan.todolist.share", binaryMessenger: flutterViewController.binaryMessenger)
-
-        // Handle the shared text passed from the Share Extension
-        channel.setMethodCallHandler { (call, result) in
-            if call.method == "getSharedText" {
-                // Retrieve the shared text from UserDefaults
-                let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
-                let sharedText = userDefaults?.string(forKey: "sharedText")
-                
-                if let text = sharedText {
-                    result(text) // Pass the shared text to Flutter
-                } else {
-                    result(FlutterError(code: "NO_TEXT", message: "No shared text found", details: nil))
-                }
-            } else {
-                result(FlutterMethodNotImplemented)
-            }
+    methodChannel.setMethodCallHandler { (call, result) in
+      if call.method == "getSharedText" {
+        // Retrieve shared text from UserDefaults (or other shared data sources)
+        let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
+        if let sharedText = userDefaults?.string(forKey: "sharedText") {
+          result(sharedText)
+        } else {
+          result(FlutterError(code: "NO_DATA", message: "No shared text found", details: nil))
         }
-
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+      } else {
+        result(FlutterMethodNotImplemented)
+      }
     }
+
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
 }
