@@ -1,71 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Add this line
 import 'dart:async';
 
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
+Future<String> getSharedText() async {
+  const platform = MethodChannel('com.icyan.todolist/share');
+  try {
+    final sharedText = await platform.invokeMethod<String>('getSharedText');
+    return sharedText ?? 'No data shared';
+  } on PlatformException catch (e) {
+    print("Failed to get shared text: '${e.message}'.");
+    return 'Failed to get shared text';
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  late StreamSubscription _intentSub;
-  final _sharedFiles = <SharedMediaFile>[];
+void main() {
+  runApp(MyApp());
+}
 
-  @override
-  void initState() {
-    super.initState();
-
-    // Listen to media sharing coming from outside the app while the app is in the memory.
-    _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen((value) {
-      setState(() {
-        _sharedFiles.clear();
-        _sharedFiles.addAll(value);
-
-        print(_sharedFiles.map((f) => f.toMap()));
-      });
-    }, onError: (err) {
-      print("getIntentDataStream error: $err");
-    });
-
-    // Get the media sharing coming from outside the app while the app is closed.
-    ReceiveSharingIntent.instance.getInitialMedia().then((value) {
-      setState(() {
-        _sharedFiles.clear();
-        _sharedFiles.addAll(value);
-        print(_sharedFiles.map((f) => f.toMap()));
-
-        // Tell the library that we are done processing the intent.
-        ReceiveSharingIntent.instance.reset();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _intentSub.cancel();
-    super.dispose();
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const textStyleBold = const TextStyle(fontWeight: FontWeight.bold);
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Text("Shared files:", style: textStyleBold),
-              Text(_sharedFiles
-                  .map((f) => f.toMap())
-                  .join(",\n****************\n")),
-            ],
-          ),
+        appBar: AppBar(title: Text('Shared Data Example')),
+        body: FutureBuilder<String>(
+          future: getSharedText(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            return Text('Shared text: ${snapshot.data}');
+          },
         ),
       ),
     );

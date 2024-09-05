@@ -19,4 +19,19 @@ class ShareViewController: RSIShareViewController {
     //     super.presentationAnimationDidFinish()
     //     navigationController?.navigationBar.topItem?.rightBarButtonItem?.title = "Send"
     // }
+        // 受け取ったテキストデータを Flutter に渡す
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if let content = self.extensionContext?.inputItems.first as? NSExtensionItem,
+           let text = content.attributedContentText?.string {
+            // Flutterにデータを渡す処理
+            // 受け取ったテキストを UserDefaults などを通して main.dart へ渡す
+            let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
+            userDefaults?.set(text, forKey: "sharedText")
+        }
+
+        // 終了処理
+        self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+    }
 }
