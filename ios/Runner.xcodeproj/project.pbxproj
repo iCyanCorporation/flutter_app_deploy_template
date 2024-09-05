@@ -83,6 +83,7 @@
 		5A569C872C896F4C008E8019 /* receive_sharing_intent.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = receive_sharing_intent.xcframework; path = ../Flutter/Release/receive_sharing_intent.xcframework; sourceTree = "<group>"; };
 		5A569C8B2C896FC5008E8019 /* Release */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Release; path = ../Flutter/Release; sourceTree = "<group>"; };
 		5A569C8C2C896FD7008E8019 /* TensorFlowLite.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TensorFlowLite.xcframework; path = ../Flutter/Release/TensorFlowLite.xcframework; sourceTree = "<group>"; };
+		5A569C902C89A9E9008E8019 /* myShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = myShareExtension.entitlements; sourceTree = "<group>"; };
 		5ADE27702C85FF7D00D61BB6 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		7188754C18E16EF836FEC87F /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -146,6 +147,7 @@
 		5A4F90F72C87F86E00E03663 /* myShareExtension */ = {
 			isa = PBXGroup;
 			children = (
+				5A569C902C89A9E9008E8019 /* myShareExtension.entitlements */,
 				5A4F90F82C87F86E00E03663 /* ShareViewController.swift */,
 				5A4F90FA2C87F86E00E03663 /* MainInterface.storyboard */,
 				5A4F90FD2C87F86E00E03663 /* Info.plist */,
@@ -702,6 +704,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = myShareExtension/myShareExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -744,6 +747,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = myShareExtension/myShareExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -783,6 +787,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = myShareExtension/myShareExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
