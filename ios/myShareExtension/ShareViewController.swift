@@ -4,9 +4,6 @@
 //
 //  Created by 陳豐文 on 2024/09/04.
 //
-import UIKit
-import Social
-import Flutter
 import receive_sharing_intent
 
 class ShareViewController: RSIShareViewController {
