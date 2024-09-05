@@ -5,18 +5,16 @@
 //  Created by 陳豐文 on 2024/09/04.
 //
 import UIKit
+import Social
 import Flutter
+import receive_sharing_intent
 
-class ShareViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        showFlutter()
+class ShareViewController: RSIShareViewController {
+      
+    // Use this method to return false if you don't want to redirect to host app automatically.
+    // Default is true
+    override func shouldAutoRedirect() -> Bool {
+        return false
     }
-
-    func showFlutter() {
-        let flutterViewController = FlutterViewController(project: nil, nibName: nil, bundle: nil)
-        addChild(flutterViewController)
-        view.addSubview(flutterViewController.view)
-        flutterViewController.view.frame = view.bounds
-    }
+    
 }

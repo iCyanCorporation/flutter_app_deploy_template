@@ -34,6 +34,9 @@ dependencies:
   # for Japanese
   mecab_dart: 0.1.6
 
+  # for sharing
+  receive_sharing_intent: ^1.8.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
