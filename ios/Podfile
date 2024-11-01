@@ -35,6 +35,13 @@ target 'Runner' do
   target 'RunnerTests' do
     inherit! :search_paths
   end
+
+  # SHARE
+  # Share Extension is name of Extension which you created which is in this case 'Share Extension'
+  target 'myShareExtension' do
+    inherit! :search_paths
+  end
+  # SHARE
 end
 
 post_install do |installer|

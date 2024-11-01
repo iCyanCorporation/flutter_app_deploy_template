@@ -22,5 +22,9 @@ flutter create .
 ```
 
 ### 2
+1. add share extension by xcode in mac.
+2. add app group
+
+### 3
 https://github.com/KasemJaffer/receive_sharing_intent
 
