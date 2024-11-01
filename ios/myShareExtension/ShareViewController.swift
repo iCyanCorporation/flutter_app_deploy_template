@@ -1,20 +1,24 @@
-import UIKit
-import Social
 
-class ShareViewController: SLComposeServiceViewController {
-    override func didSelectPost() {
-        if let item = extensionContext?.inputItems.first as? NSExtensionItem,
-           let itemProvider = item.attachments?.first {
-            if itemProvider.hasItemConformingToTypeIdentifier("public.text") {
-                itemProvider.loadItem(forTypeIdentifier: "public.text", options: nil) { (text, error) in
-                    if let sharedText = text as? String {
-                        let userDefaults = UserDefaults(suiteName: "group.com.todolist.shareExtension")
-                        userDefaults?.set(sharedText, forKey: "sharedText")
-                        userDefaults?.synchronize()
-                    }
-                }
-            }
-        }
-        self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+//
+//  ShareViewController.swift
+//  Sharing Extension
+//
+//  Created by Kasem Mohamed on 2019-05-30.
+//  Copyright © 2019 The Chromium Authors. All rights reserved.
+//
+import receive_sharing_intent
+
+class ShareViewController: RSIShareViewController {
+    
+    // Use this method to return false if you don't want to redirect to host app automatically.
+    // Default is true
+    override func shouldAutoRedirect() -> Bool {
+        return false
+    }
+    
+    // Use this to change label of Post button
+    override func presentationAnimationDidFinish() {
+        super.presentationAnimationDidFinish()
+        navigationController?.navigationBar.topItem?.rightBarButtonItem?.title = "Send"
     }
 }
