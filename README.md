@@ -28,3 +28,7 @@ flutter create .
 ### 3
 https://github.com/KasemJaffer/receive_sharing_intent
 
+### 4
+```
+pod install
+```
